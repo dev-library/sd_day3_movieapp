@@ -1,0 +1,36 @@
+<!-- templates/movies/form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${movie.id} != null ? '영화 수정' : '새 영화 등록'">폼</title>
+</head>
+<body>
+<h1 th:text="${movie.id} != null ? '영화 수정' : '+ 새 영화 등록'"></h1>
+
+<form th:action="${movie.id} != null ? @{'/movies/' + ${movie.id}} : @{/movies}"
+      th:object="${movie}" method="post">
+    <div>
+        <label for="title">제목</label><br/>
+        <input type="text" id="title" name="title" th:field="*{title}" required />
+    </div>
+    <br/>
+    <div>
+        <label for="director">감독</label><br/>
+        <input type="text" id="director" name="director" th:field="*{director}" required />
+    </div>
+    <br/>
+    <div>
+        <label for="releaseDate">개봉일</label><br/>
+		<input type="date" name="releaseDate"
+		       th:value="${#temporals.format(movie.releaseDate, 'yyyy-MM-dd')}" required />
+    </div>
+    <br/>
+    <button type="submit" th:text="${movie.id} != null ? '수정 완료' : '등록'"></button>
+</form>
+
+<br/>
+<a href="/movies">목록으로</a>
+
+</body>
+</html>

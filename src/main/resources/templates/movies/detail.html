@@ -1,0 +1,27 @@
+<!-- templates/movies/detail.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${movie.title}">영화 상세</title>
+</head>
+<body>
+<h1 th:text="${movie.title}">제목</h1>
+
+<p><strong>감독:</strong> <span th:text="${movie.director}">감독</span></p>
+<p><strong>개봉일:</strong> <span th:text="${movie.releaseDate}">2025-01-01</span></p>
+
+<hr/>
+
+<!-- 수정/삭제 버튼 -->
+<a th:href="@{/movies/{id}/edit(id=${movie.id})}">수정</a>
+
+<form th:action="@{/movies/{id}/delete(id=${movie.id})}" method="post" style="display:inline;">
+    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+</form>
+
+<br/><br/>
+<a href="/movies">← 목록으로</a>
+
+</body>
+</html>

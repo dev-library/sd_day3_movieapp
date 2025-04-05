@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
@@ -40,14 +43,21 @@ public class ElasticsearchConfig {
         if (username != null && !username.isEmpty()) {
             final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials(username, password.toString()));
-
+                new UsernamePasswordCredentials(username, password));
             builder.setHttpClientConfigCallback(httpClientBuilder ->
                 httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
         }
 
+        // LocalDate 지원을 위해 ObjectMapper 설정
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         RestClient restClient = builder.build();
-        RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+        RestClientTransport transport = new RestClientTransport(
+            restClient,
+            new JacksonJsonpMapper(objectMapper)
+        );
+
         return new ElasticsearchClient(transport);
     }
 }
